@@ -111,9 +111,6 @@ Database access uses least-privilege accounts.
 - ✅ Soft deletes for GDPR compliance
 - ✅ Immutable audit log (INSERT ONLY)
 
-
-
-
 ### Threat Model
 Covers 14 identified threats including:
 - SQL injection (Severity: Critical)
@@ -122,9 +119,6 @@ Covers 14 identified threats including:
 - Privilege escalation (High)
 - Session hijacking (High)
 - DDoS/Brute force (Medium)
-
-
-
 
 ### Isolation Strategy
 ```
@@ -166,8 +160,6 @@ Ongoing:
 - [ ] Quarterly threat model review
 - [ ] Key rotation scheduled
 
-
-
 ## 📊 Audit Logging
 
 All sensitive operations logged:
@@ -183,4 +175,36 @@ Audit logs:
 - Include timestamp, user, action, resource, IP, user agent
 - Retained for 1 year (configurable)
 
+## 🔐 Password Hashing
 
+```python
+from security import password_hasher
+
+# Hash password (returns bcrypt hash with salt)
+hash = password_hasher.hash_password("SecurePassword123!")
+# ~200ms per hash (cost factor 12)
+
+# Verify password (constant-time comparison)
+is_valid = password_hasher.verify_password("SecurePassword123!", hash)
+# Returns False for wrong password, never raises exception
+```
+
+## 🔐 Encryption
+
+```python
+from security import encryption
+
+# Encrypt user data
+ciphertext = encryption.encrypt("Sensitive data", user_id=123)
+# Uses user-specific key derived from master key
+
+# Decrypt user data
+plaintext = encryption.decrypt(ciphertext, user_id=123)
+# Only works with correct user_id (different key)
+
+# Tampering detected
+try:
+    encryption.decrypt(corrupted_ciphertext, user_id=123)
+except EncryptionError:
+    print("Data tampered with")
+```
