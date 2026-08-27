@@ -88,4 +88,6 @@ Authentication tokens are short-lived.
 Security events are logged without logging journal content.
 Database access uses least-privilege accounts.
 
+<img width="618" height="503" alt="Screenshot 2026-08-27 at 13 43 01" src="https://github.com/user-attachments/assets/2f2ad236-73ea-4d3a-8fa5-889a95423f26" />
+
 
