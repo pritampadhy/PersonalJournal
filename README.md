@@ -123,18 +123,12 @@ Visit `http://localhost:5000/health` to verify
 
 ## 📊 Architecture Highlights
 
-
 ### Data Flow
 ```
 User Input → Validation → Authentication → Encryption → Database
                                               ↓
                                           Audit Log
 ```
-
-
-
-
-
 ## 📚 Documentation
 
 | Document | Purpose |
@@ -144,8 +138,6 @@ User Input → Validation → Authentication → Encryption → Database
 | **API.md** | Complete API reference with examples (20+ endpoints) |
 | **QUICKSTART.md** | Quick start, development setup, troubleshooting |
 | **README.md** (this file) | Overview and project structure |
-
-
 
 ## 📋 API Endpoints
 
@@ -167,39 +159,6 @@ User Input → Validation → Authentication → Encryption → Database
 
 See [API.md](API.md) for complete reference with examples.
 
-## 🔐 Password Hashing
-
-```python
-from security import password_hasher
-
-# Hash password (returns bcrypt hash with salt)
-hash = password_hasher.hash_password("SecurePassword123!")
-# ~200ms per hash (cost factor 12)
-
-# Verify password (constant-time comparison)
-is_valid = password_hasher.verify_password("SecurePassword123!", hash)
-# Returns False for wrong password, never raises exception
-```
-
-## 🔐 Encryption
-
-```python
-from security import encryption
-
-# Encrypt user data
-ciphertext = encryption.encrypt("Sensitive data", user_id=123)
-# Uses user-specific key derived from master key
-
-# Decrypt user data
-plaintext = encryption.decrypt(ciphertext, user_id=123)
-# Only works with correct user_id (different key)
-
-# Tampering detected
-try:
-    encryption.decrypt(corrupted_ciphertext, user_id=123)
-except EncryptionError:
-    print("Data tampered with")
-```
 
 ## 🔐 Token Management
 
