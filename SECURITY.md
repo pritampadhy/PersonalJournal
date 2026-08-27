@@ -1,11 +1,10 @@
-# Security Policy
+# Security Policy (WIP)
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Custom Instructions that bake in enterprise-grade production directives — threat modeling, secure coding standards, database isolation rules, and proper secret management.
 
-| Version | Supported          |
+| Version | Supported  (WIP)        |
 | ------- | ------------------ |
 | 5.1.x   | :white_check_mark: |
 | 5.0.x   | :x:                |
@@ -21,13 +20,15 @@ reported vulnerability, what to expect if the vulnerability is accepted or
 declined, etc.
 
 **User Authentication**
----->Sign-in via Firebase
+---->Sign-in via Database 
 
 **Multi-turn AI Interaction**
----->Real conversations with the Gemini API for brainstorming/journaling
+---->Real conversations with the  API for brainstorming/journaling
 
 **Isolated Data Storage**
----->Each user's summaries/logs persist to Cloud Firestore — with zero cross-user leakage
+---->Each user's summaries/logs persist to Cloud DB — with zero cross-user leakage
 
 **Secure Key Management**
----->API keys retrieved via Google Cloud Secret Manager, never hardcoded
+---->API keys retrieved via Cloud Secret Manager, never hardcoded
+
+
