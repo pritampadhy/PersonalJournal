@@ -19,3 +19,12 @@ Use this section to tell people how to report a vulnerability.
 Tell them where to go, how often they can expect to get an update on a
 reported vulnerability, what to expect if the vulnerability is accepted or
 declined, etc.
+
+**User Authentication**
+---->Sign-in via Firebase
+**Multi-turn AI Interaction**
+---->Real conversations with the Gemini API for brainstorming/journaling
+**Isolated Data Storage**
+---->Each user's summaries/logs persist to Cloud Firestore — with zero cross-user leakage
+**Secure Key Management**
+---->API keys retrieved via Google Cloud Secret Manager, never hardcoded
