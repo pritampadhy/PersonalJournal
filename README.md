@@ -29,8 +29,6 @@ Default to read-only journaling tools. Treat journal text and retrieved content 
 ## Release gates
 Threat model updated; tests cover auth/IDOR/isolation; dependency and secret scans pass; SBOM generated; backups encrypted and restore-tested; key rotation tested; incident runbook and data-deletion/export workflow approved; red-team prompt-injection and exfiltration tests pass; DPA/consent and regional data-retention requirements reviewed.
 
-
-
 ### Compliance
 - ✅ GDPR-compliant (right to access, right to deletion)
 - ✅ OWASP Top 10 protections
@@ -46,7 +44,7 @@ Threat model updated; tests cover auth/IDOR/isolation; dependency and secret sca
 - ✅ Request ID tracing
 - ✅ Comprehensive error logging
 
-## 📁 Project Structure
+## 📁 Project Structure(WIP)
 
 ```
 .
@@ -135,37 +133,7 @@ User Input → Validation → Authentication → Encryption → Database
 
 
 
-## 🧪 Testing
 
-### Test Coverage
-- **Security tests**: 15+ tests
-- **Authentication tests**: 8+ tests
-- **API tests**: 20+ tests
-- **Integration tests**: 5+ tests
-- **Total**: 50+ comprehensive tests
-
-### Run Tests
-```bash
-# All tests
-pytest tests.py -v
-
-# With coverage
-pytest --cov=. tests.py
-
-# Security tests only
-pytest tests.py::TestPasswordHasher -v
-pytest tests.py::TestSymmetricEncryption -v
-pytest tests.py::TestTokenManager -v
-```
-
-### Security Validation
-```bash
-# Static analysis
-bandit -r .           # Security issues
-safety check          # Dependency vulnerabilities
-flake8 .             # Code quality
-mypy .               # Type checking
-```
 
 ## 📚 Documentation
 
@@ -262,28 +230,6 @@ Account lockout:
 - 5 failed login attempts → 30 minute lockout
 - Lockout tracked and logged
 
-## 🌍 Deployment Options
-
-### Docker
-```bash
-docker build -t journal-app:latest .
-docker run -p 5000:5000 journal-app:latest
-```
-
-### Kubernetes
-Full example manifests provided:
-- Deployment with rolling updates
-- Service for load balancing
-- HPA for auto-scaling
-- Security contexts enforced
-- Liveness/readiness probes
-
-### Traditional VM
-- Gunicorn + gevent workers
-- Supervisor for process management
-- Nginx reverse proxy + TLS termination
-- PostgreSQL with WAL archiving
-- Redis for caching/rate limiting
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed guides.
 
