@@ -1,5 +1,5 @@
 # PersonalJournal (ToBeModified)
-Personal Journal — an authenticated web app where users sign in, brainstorm or journal with Gemini, and have their conversations automatically summarized and saved. 
+Personal Journal — an authenticated web app where users sign in, brainstorm or journal with LLM, and have their conversations automatically summarized and saved. 
 
 # Personal Journal Application - Enterprise Security Edition
 
