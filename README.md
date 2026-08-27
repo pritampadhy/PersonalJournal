@@ -6,29 +6,30 @@ Personal Journal — an authenticated web app where users sign in, brainstorm or
 A production-grade, secure journal application built with industry best practices for encryption, authentication, and data protection.
 
 ## 🔐 Security Features
+# Production security directives
 
-### Authentication & Authorization
-- ✅ OAuth 2.0 + JWT token-based authentication
-- ✅ bcrypt password hashing (cost factor 12, ~200ms per hash)
-- ✅ Account lockout protection (5 failed attempts → 30 min lockout)
-- ✅ Token rotation on refresh
-- ✅ CSRF protection on state-changing operations
-- ✅ Role-based access control (RBAC)
+## Threat model
+- Assets: credentials, journal plaintext, tokens, LLM prompts/responses, provider keys, audit records.
+- Trust boundaries: browser/API, API/database, API/LLM provider, agent/tools/social APIs, operators/CI.
+- Threats: account takeover, IDOR/cross-tenant reads, SQL injection, XSS, CSRF, prompt injection, data leakage to model providers, tool misuse, supply-chain compromise, abuse/cost exhaustion, backups/logs exposing plaintext.
+- Mitigations: Argon2id, short-lived tokens with rotation/revocation, TLS, strict owner predicates, encrypted fields, parameterized ORM, validation, rate limits, redacted logs, least-privilege service accounts, approval gates for write tools, egress allowlists, monitoring and incident response.
 
-### Encryption
-- ✅ AES-256-GCM encryption at rest for all journal entries
-- ✅ User-specific keys derived from master key using HKDF-SHA256
-- ✅ Authenticated encryption (detects tampering)
-- ✅ TLS 1.3+ for all network communication
-- ✅ HTTPS-only cookies with Secure, HttpOnly, SameSite flags
+## Database isolation
+Every query for tenant-owned data MUST constrain by authenticated `owner_id`; never accept owner IDs from clients. For enterprise multi-tenant deployments, use PostgreSQL Row-Level Security with a transaction-local tenant claim, separate encryption keys per tenant, separate schemas or databases for high-sensitivity tenants, and tested backup/restore isolation.
 
-### Database Security
-- ✅ Row-level security (RLS) enforced at database level
-- ✅ User data isolation - queries always filtered by user ID
-- ✅ Parameterized queries (SQLAlchemy ORM)
-- ✅ No direct password access at database level
-- ✅ Soft deletes for GDPR compliance
-- ✅ Immutable audit log (INSERT ONLY)
+## Secrets
+Use a cloud secret manager/Vault in production. Inject secrets at runtime; never commit `.env`, keys, tokens, prompts containing secrets, or production dumps. Rotate provider keys and JWT/encryption keys with a key-ID scheme and planned re-encryption. Keep encryption keys separate from database backups. Add secret scanning to CI.
+
+## Authentication and application security
+Use HTTPS/HSTS, secure HttpOnly SameSite cookies if moving from bearer tokens, MFA/passkeys for enterprise, email verification, password-reset tokens that are single-use and hashed at rest, login throttling, generic auth errors, CSRF protection for cookie auth, CSP, dependency/SAST/DAST scanning, migrations reviewed and reversible, and immutable audit logs. Disable interactive API docs in production.
+
+## LLM and agent policy
+Default to read-only journaling tools. Treat journal text and retrieved content as untrusted prompt data. Use allowlisted tools with typed schemas, per-user authorization inside every tool, timeouts, budgets, rate limits, output validation, PII/redaction controls, provider data-retention review, and human confirmation for publishing, messaging, deleting, or financial actions. Do not grant an agent unrestricted shell, browser, database, or social-media access. Record tool decisions without recording sensitive plaintext.
+
+## Release gates
+Threat model updated; tests cover auth/IDOR/isolation; dependency and secret scans pass; SBOM generated; backups encrypted and restore-tested; key rotation tested; incident runbook and data-deletion/export workflow approved; red-team prompt-injection and exfiltration tests pass; DPA/consent and regional data-retention requirements reviewed.
+
+
 
 ### Compliance
 - ✅ GDPR-compliant (right to access, right to deletion)
@@ -124,14 +125,6 @@ Visit `http://localhost:5000/health` to verify
 
 ## 📊 Architecture Highlights
 
-### Threat Model
-Covers 14 identified threats including:
-- SQL injection (Severity: Critical)
-- Unauthorized data access (Critical)
-- Credential compromise (High)
-- Privilege escalation (High)
-- Session hijacking (High)
-- DDoS/Brute force (Medium)
 
 ### Data Flow
 ```
@@ -140,24 +133,7 @@ User Input → Validation → Authentication → Encryption → Database
                                           Audit Log
 ```
 
-### Isolation Strategy
-```
-┌─────────────────────────────────────┐
-│          API Layer                  │
-│  (User ID verified from token)      │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│      Application Layer              │
-│  (Query filtered by user_id)        │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│      Database Layer (PostgreSQL)    │
-│  (Row-Level Security enforced)      │
-│  (Encryption at field level)        │
-└─────────────────────────────────────┘
-```
+
 
 ## 🧪 Testing
 
@@ -201,25 +177,7 @@ mypy .               # Type checking
 | **QUICKSTART.md** | Quick start, development setup, troubleshooting |
 | **README.md** (this file) | Overview and project structure |
 
-## 🔒 Security Checklist
 
-Pre-Production:
-- [ ] All secrets in Vault (not in code)
-- [ ] SSL/TLS certificate installed
-- [ ] Database encryption enabled
-- [ ] Rate limiting configured
-- [ ] Security headers configured
-- [ ] CORS policy set to minimum
-- [ ] Audit logging enabled
-- [ ] Backups encrypted and tested
-- [ ] Security team onboarded
-
-Ongoing:
-- [ ] Daily log analysis
-- [ ] Weekly security audits
-- [ ] Monthly penetration tests
-- [ ] Quarterly threat model review
-- [ ] Key rotation scheduled
 
 ## 📋 API Endpoints
 
@@ -303,21 +261,6 @@ Default limits:
 Account lockout:
 - 5 failed login attempts → 30 minute lockout
 - Lockout tracked and logged
-
-## 📊 Audit Logging
-
-All sensitive operations logged:
-- User login/logout
-- Registration
-- Failed authentication
-- Journal entry CRUD
-- User deletion
-- Account lockout
-
-Audit logs:
-- Immutable (INSERT ONLY, no updates/deletes)
-- Include timestamp, user, action, resource, IP, user agent
-- Retained for 1 year (configurable)
 
 ## 🌍 Deployment Options
 
