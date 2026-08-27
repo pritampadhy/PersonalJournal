@@ -22,9 +22,12 @@ declined, etc.
 
 **User Authentication**
 ---->Sign-in via Firebase
+
 **Multi-turn AI Interaction**
 ---->Real conversations with the Gemini API for brainstorming/journaling
+
 **Isolated Data Storage**
 ---->Each user's summaries/logs persist to Cloud Firestore — with zero cross-user leakage
+
 **Secure Key Management**
 ---->API keys retrieved via Google Cloud Secret Manager, never hardcoded
