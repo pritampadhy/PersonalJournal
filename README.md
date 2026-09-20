@@ -1,3 +1,14 @@
+About Myself
+
+Websites Developed  vibe coded 
+https://muse-diary.lovable.app
+1. Vercel Research Agent.  https://triagent-wheat.vercel.app/
+2. Lovable Personal Journey   https://muse-diary.lovable.app/journal
+
+Google multi agnet 
+https://multi-agent-reasoning-dashb1265.ai.studio
+
+
 # PersonalJournal (ToBeModified)
 Personal Journal — an authenticated web app where users sign in, brainstorm or journal with LLM, and have their conversations automatically summarized and saved. 
 
